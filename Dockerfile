@@ -42,23 +42,20 @@ EXPOSE 22
 
 
 # make sure the package repository is up to date
-ADD nginx/nginx.repo /etc/yum.repos.d/nginx.repo
-RUN chmod 0644 /etc/yum.repos.d/nginx.repo
-
+RUN rpm -i http://nginx.org/packages/centos/6/noarch/RPMS/nginx-release-centos-6-0.el6.ngx.noarch.rpm
 RUN yum install -y nginx
 
 # Setup Nginx
 RUN mkdir -p /var/www
+RUN mkdir -p /etc/nginx/sites-enabled
 ADD ./index.html /var/www/index.html
-
 ADD ./default /etc/nginx/sites-available/default
 RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
-
 RUN rm /etc/nginx/nginx.conf
 ADD ./nginx.conf /etc/nginx/nginx.conf
 
 # Attach volumes.
-VOLUME /var/log/nginx
+#VOLUME /var/log/nginx
 
 # Set working directory.
 #WORKDIR /etc/nginx
